@@ -8,11 +8,11 @@
         <version>2.6.6</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.server</groupId>
-    <artifactId>notification</artifactId>
+    <groupId>com.member</groupId>
+    <artifactId>api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>notification</name>
-    <description>notification</description>
+    <name>member-api</name>
+    <description></description>
     <properties>
         <java.version>11</java.version>
     </properties>
