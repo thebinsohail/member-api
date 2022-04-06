@@ -4,8 +4,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 
 @RestController
@@ -17,38 +16,45 @@ public class MemberController {
         return uuid;
     }
 
-    List<Member> memberList=List.of(
-            new Member(1L,"Anas Bin Sohail",generateRandomUUID().toString(),"Developer"),
-            new Member(2L,"Qasim Khan ",generateRandomUUID().toString(),"Tester"),
-            new Member(3L,"Muhammad Yousuf",generateRandomUUID().toString(),"Developer"),
-            new Member(4L,"Siddique Ahmed",generateRandomUUID().toString(),"Manager")
-            );
+    List<Member> memberList= new ArrayList<>();
+
 
     @PostMapping(path = "/save",produces = MediaType.APPLICATION_JSON_VALUE)
     public Member saveMember(@RequestBody Member member){
 
         if(memberList.contains(member))
-            throw new IllegalStateException("User Already exists!");
+            throw new IllegalStateException("User already exists!");
 
-        else
+        else {
+
             memberList.add(member);
-
+        }
         return member;
     }
 
-    @GetMapping(path = "/all",produces = MediaType.APPLICATION_JSON_VALUE)
+
+    @GetMapping(path = "/all")
     public List<Member> getAllMembers(Member member){
         return memberList;
     }
 
     @DeleteMapping(path = "/delete/{id}")
-    public ResponseEntity deleteMember(@PathVariable String id){
-        memberList.remove(id);
-        return ResponseEntity.ok(String.format("User with id %s was deleted successfully!",id));
+    public ResponseEntity deleteMember(@PathVariable("id") Integer id){
+
+
+        for (Member member:memberList) {
+
+            if(member.getId()==id) {
+                memberList.remove(member);
+                return ResponseEntity.ok(String.format("Member with id %d was deleted!",id));
+            }
+
+
+        }
+
+        return ResponseEntity.internalServerError().body("There was a problem deleting the member");
+
     }
-
-
-
 }
 
 
