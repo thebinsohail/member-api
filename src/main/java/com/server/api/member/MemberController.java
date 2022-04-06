@@ -55,6 +55,27 @@ public class MemberController {
         return ResponseEntity.internalServerError().body("There was a problem deleting the member");
 
     }
+
+    @PutMapping(path = "/update/{id}")
+    public String updateMember(@PathVariable("id") Integer id,@RequestBody MemberDto memberDto){
+        for (Member member:memberList) {
+
+            if(member.getId()==id) {
+
+                member.setFullName(memberDto.getFullName());
+                member.setRelation(memberDto.getRelation());
+                member.setQrCode(memberDto.getQrCode());
+
+                return String.format("Changes were done to member %d\n" +
+                        memberDto.toString(),id);
+            }
+
+
+        }
+            return "There was a problem";
+    }
+
+
 }
 
 
