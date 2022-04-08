@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Random;
 
 @RestController
-@RequestMapping(path = "/subscribe")
+@RequestMapping(path = "/status")
 public class NotifyController {
 
 
