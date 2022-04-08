@@ -1,5 +1,6 @@
 package com.server.api.member;
 
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,7 +10,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping(path = "/member")
-public class MemberController {
+public class MemberController implements CommandLineRunner {
 
     public static UUID generateRandomUUID(){
         UUID uuid=UUID.randomUUID();
@@ -76,6 +77,12 @@ public class MemberController {
     }
 
 
+    @Override
+    public void run(String... args) throws Exception {
+        memberList.add(new Member(1,String.valueOf(generateRandomUUID()),"Anas Bin Sohail","Student"));
+        memberList.add(new Member(2,String.valueOf(generateRandomUUID()),"Muhammad Yousuf","Student"));
+        memberList.add(new Member(3,String.valueOf(generateRandomUUID()),"Abdul Wahid","Teacher"));
+    }
 }
 
 
