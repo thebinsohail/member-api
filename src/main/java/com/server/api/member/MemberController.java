@@ -26,7 +26,7 @@ public class MemberController {
             throw new IllegalStateException("User already exists!");
 
         else {
-
+            member.setId(generateRandomUUID().toString());
             memberList.add(member);
         }
         return member;
@@ -39,14 +39,14 @@ public class MemberController {
     }
 
     @DeleteMapping(path = "/delete/{id}")
-    public ResponseEntity deleteMember(@PathVariable("id") Integer id){
+    public ResponseEntity deleteMember(@PathVariable("id") String id){
 
 
         for (Member member:memberList) {
 
-            if(member.getId()==id) {
+            if(member.getId().equals(id)) {
                 memberList.remove(member);
-                return ResponseEntity.ok(String.format("Member with id %d was deleted!",id));
+                return ResponseEntity.ok(String.format("Member with id %s was deleted!",id));
             }
 
 
@@ -57,16 +57,16 @@ public class MemberController {
     }
 
     @PutMapping(path = "/update/{id}")
-    public String updateMember(@PathVariable("id") Integer id,@RequestBody MemberDto memberDto){
+    public String updateMember(@PathVariable("id") String id,@RequestBody MemberDto memberDto){
         for (Member member:memberList) {
 
-            if(member.getId()==id) {
+            if(member.getId().equals(id)) {
 
                 member.setFullName(memberDto.getFullName());
                 member.setRelation(memberDto.getRelation());
                 member.setQrCode(memberDto.getQrCode());
 
-                return String.format("Changes were done to member %d\n" +
+                return String.format("Changes were done to member %s\n" +
                         memberDto.toString(),id);
             }
 

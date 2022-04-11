@@ -12,7 +12,7 @@ import lombok.*;
 public class Member {
 
 
-    private Integer id;
+    private String id;
     private String qrCode;
     private String fullName;
     private String relation;
