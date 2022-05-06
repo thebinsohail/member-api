@@ -4,6 +4,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.Option;
 import java.util.*;
 
 
@@ -74,6 +75,26 @@ public class MemberController {
         }
             return "There was a problem";
     }
+
+
+    @PutMapping(path = "/forgot/password/{id}")
+    public String forgotPassword(@PathVariable String id,@RequestBody ForgotPasswordDto forgotPasswordDto){
+
+        for (Member member:memberList) {
+
+            if(member.getId().equals(id) &&
+                            member.getPassword().equals(forgotPasswordDto.getOldPassword())){
+                member.setPassword(forgotPasswordDto.getNewPassword());
+                System.out.println("Password was updated !");
+                break;
+            }
+            else
+                throw new IllegalStateException("There was a problem!");
+        }
+        return "Password was changed!";
+    }
+
+
 
 
 }

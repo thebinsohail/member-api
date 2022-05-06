@@ -11,10 +11,10 @@ import lombok.*;
 @Data
 public class Member {
 
-
     private String id;
     private String qrCode;
     private String fullName;
+    private String password;
     private String relation;
 
 }
