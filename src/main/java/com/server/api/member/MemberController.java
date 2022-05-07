@@ -4,8 +4,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.Option;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 
 @RestController
@@ -32,6 +34,27 @@ public class MemberController {
         }
         return member;
     }
+
+
+    @PostMapping(path = "/login")
+    public Member login(@RequestBody LoginDto loginDto){
+
+        Random random=new Random();
+        Integer resetCode = Integer.valueOf(String.format("%04d", random.nextInt(10000)));
+        Member loginMember = null;
+
+        for (Member member:memberList) {
+            if(member.getEmail().equals(loginDto.getEmail()) && member.getPassword().equals(loginDto.getPassword())){
+                loginMember=member;
+                loginMember.setResetCode(resetCode);
+                break;
+            }
+            else
+                throw new IllegalStateException(String.format("User with email %s not found!",loginDto.getEmail()));
+        }
+        return loginMember;
+    }
+
 
 
     @GetMapping(path = "/all")
@@ -76,26 +99,34 @@ public class MemberController {
             return "There was a problem";
     }
 
+    // for the password updating
+    public boolean memberExists=false;
+    public Member member;
 
-    @PutMapping(path = "/forgot/password/{id}")
-    public String forgotPassword(@PathVariable String id,@RequestBody ForgotPasswordDto forgotPasswordDto){
+    @PutMapping(path = "/forgot/password/verify")
+    public boolean forgotPassword(@RequestBody ForgotPasswordDto forgotPasswordDto){
 
         for (Member member:memberList) {
+                if(member.getEmail().equals(forgotPasswordDto.getEmail()) &&
+                        member.getResetCode().equals(forgotPasswordDto.getResetCode())){
+                      this.member=member;
+                     memberExists=true;
+                    return true;
+                }}
 
-            if(member.getId().equals(id) &&
-                            member.getPassword().equals(forgotPasswordDto.getOldPassword())){
-                member.setPassword(forgotPasswordDto.getNewPassword());
-                System.out.println("Password was updated !");
-                break;
-            }
-            else
-                throw new IllegalStateException("There was a problem!");
-        }
-        return "Password was changed!";
+           throw new IllegalStateException("User not found!");
     }
 
 
-
+    @PutMapping(path = "/update/password")
+    public String changePassword(@RequestBody UpdatePasswordDto updatePasswordDto){
+        if(memberExists==true){
+            member.setPassword(updatePasswordDto.getNewPassword());
+            return "Password was changed successfully!";
+        }
+        else
+            throw new IllegalStateException("There was a problem updating the password!");
+    }
 
 }
 
